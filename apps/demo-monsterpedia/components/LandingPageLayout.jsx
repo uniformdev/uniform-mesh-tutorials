@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Slot } from "@uniformdev/canvas-react";
 
-export default function LayoutCanvas({ composition }) {
+export default function LandingPageLayout({ composition }) {
   const name = composition?.parameters?.pageName?.value;
   return (
     <div className="container">

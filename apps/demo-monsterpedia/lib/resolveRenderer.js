@@ -1,8 +1,8 @@
-import DragonDetails from "../components/DragonDetails";
+import MonsterDetails from "../components/MonsterDetails";
 
 export default function resolveRenderer({ type }) {
   if (type == "dragonDetails") {
-    return DragonDetails;
+    return MonsterDetails;
   }
   return UnknownComponent;
 }

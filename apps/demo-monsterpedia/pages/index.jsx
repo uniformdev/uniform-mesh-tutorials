@@ -8,9 +8,10 @@ import {
 import { Composition } from "@uniformdev/canvas-react";
 import {
   CANVAS_MONSTER_LIST_PARAMETER_TYPES,
-  createClient,
   createMonsterEnhancer,
 } from "canvas-monsterpedia";
+import { createClient } from "monsterpedia";
+
 import { useLivePreviewNextStaticProps } from "../hooks/useLivePreviewNextStaticProps";
 import resolveRenderer from "../lib/resolveRenderer";
 import LandingPageLayout from "../components/LandingPageLayout";

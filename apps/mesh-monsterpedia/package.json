@@ -10,9 +10,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@uniformdev/canvas": "^15.0.0",
-    "@uniformdev/mesh-sdk-react": "^15.0.0",
-    "canvas-monsterpedia": "*",
+    "@uniformdev/design-system": "^16.0.0",
+    "@uniformdev/mesh-sdk-react": "^16.0.0",
+    "monsterpedia": "^1.0.0",
     "next": "12.1.5",
     "react": "17.0.2",
     "react-dom": "17.0.2"

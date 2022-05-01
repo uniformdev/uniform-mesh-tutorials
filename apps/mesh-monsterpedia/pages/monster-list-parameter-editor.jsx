@@ -1,57 +1,108 @@
 import React, { useEffect, useState } from "react";
 import {
+  EntrySearch,
   useUniformMeshLocation,
-  LoadingOverlay,
 } from "@uniformdev/mesh-sdk-react";
-import { createClient } from "canvas-monsterpedia";
+import { LoadingIndicator } from "@uniformdev/design-system";
+import { createClient } from "monsterpedia";
+
+function toResult(monster) {
+  const { index, name } = monster;
+  return { id: index, title: name };
+}
+
+function getSearchResults(filter, monsters) {
+  if (!monsters) {
+    return [];
+  }
+  if (!filter) {
+    return monsters.map(toResult);
+  }
+  const regex = new RegExp(filter, "i");
+  const filtered = monsters.filter((monster) => {
+    return monster.name.match(regex);
+  });
+  return filtered.map(toResult);
+}
+
+const client = createClient();
 
 export default function MonsterListParameterEditor() {
   const { value, setValue, metadata } = useUniformMeshLocation();
-  const { parameterDefinition } = metadata;
-  const { name, typeConfig } = parameterDefinition;
-  const { filter } = typeConfig || {};
-  const [monsters, setMonsters] = useState();
-  const [loading, setLoading] = useState(false);
+  const filter = metadata?.parameterDefinition?.typeConfig?.filter;
+  const [loading, setLoading] = useState(true);
+  const [monsters, setMonsters] = useState([]);
+  const [results, setResults] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [searchText, setSearchText] = useState();
 
-  async function onMonsterSelected(e) {
-    await setValue({ index: e?.target?.value });
+  async function addMetadata(selected) {
+    for (let i = 0; i < selected.length; i++) {
+      const monster = await client.getMonster(selected[i].id);
+      if (monster) {
+        const { alignment, index, size, url } = monster;
+        selected[i].metadata = { alignment, index, size, url };
+      }
+    }
+    setSelectedItems(selected);
   }
 
   useEffect(() => {
-    setLoading(true);
-    async function loadMonsters() {
-      try {
-        const client = createClient();
-        const monsters = await client.getMonsters(filter);
-        setMonsters(monsters?.results);
-      } finally {
-        setLoading(false);
+    async function getMonsters() {
+      const monsters = await client.getMonsters(filter);
+      setMonsters(monsters);
+      const results = getSearchResults(searchText, monsters);
+      setResults(results);
+      if (value?.index) {
+        const selected = results.filter((result) => result.id == value.index);
+        addMetadata(selected).then(() => {
+          setSelectedItems(selected);
+        })
       }
+      setLoading(false);
     }
-    loadMonsters();
+    getMonsters();
   }, []);
 
-  if (!monsters) return null;
+  useEffect(() => {
+    if (value?.index) {
+      const selected = results.filter((result) => result.id == value.index);
+      if (selected && selected.length > 0) {
+        addMetadata(selected);
+        return;
+      }
+    }
+    setSelectedItems();
+  }, [value]);
+
+  useEffect(() => {
+    const results = getSearchResults(searchText, monsters);
+    setResults(results);
+  }, [searchText]);
+
+  const onSearch = (text) => setSearchText(text);
+
+  const onSelect = (selected) => {
+    if (selected && selected.length == 1) {
+      setValue({ index: selected[0].id });
+    } else {
+      setValue("");
+    }
+  };
 
   return (
     <div>
-      <LoadingOverlay isActive={loading} />
-      <label className="uniform-input-label">{name}</label>
-      <select
-        className="uniform-input uniform-input-select"
-        onChange={onMonsterSelected}
-        defaultValue={value?.index}
-      >
-        <option key="" value=""></option>
-        {monsters.map((monster) => {
-          const { index, name } = monster;
-          return (
-            <option key={index} value={index}>
-              {name}
-            </option>
-          );
-        })}
-      </select>
+      {loading && <LoadingIndicator />}
+      {!loading && (
+        <EntrySearch
+          logoIcon="/monster-badge.svg"
+          multiSelect={false}
+          results={results}
+          search={onSearch}
+          select={onSelect}
+          selectedItems={selectedItems}
+        />
+      )}
     </div>
   );
 }

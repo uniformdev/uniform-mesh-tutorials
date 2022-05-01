@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useUniformMeshLocation } from "@uniformdev/mesh-sdk-react";
 import {
-  useUniformMeshLocation,
-  Button,
+  Heading,
   Input,
+  Button,
   LoadingOverlay,
   Callout,
-} from "@uniformdev/mesh-sdk-react";
-import { createClient } from "canvas-monsterpedia";
-import { useEffect } from "react";
+} from "@uniformdev/design-system";
+import { createClient, DEFAULT_BASE_MONSTER_URL } from "monsterpedia";
 
 export default function Settings() {
   const { value, setValue } = useUniformMeshLocation();
   const [isWorking, setIsWorking] = useState(false);
   const [message, setMessage] = useState(undefined);
   const [url, setUrl] = useState(value?.url);
-  const [client, setClient] = useState();
+  const [client, setClient] = useState(createClient());
 
   useEffect(() => {
     const client = createClient(url);
@@ -29,10 +29,10 @@ export default function Settings() {
         return;
       }
       const monsters = await client.getMonsters();
-      if (monsters?.count >= 0) {
+      if (monsters?.length >= 0) {
         setMessage({
           type: "success",
-          text: `This is a valid endpoint (${monsters.count} monsters returned)`,
+          text: `This is a valid endpoint (${monsters.length} monsters returned)`,
         });
       } else {
         setMessage({
@@ -56,7 +56,7 @@ export default function Settings() {
       return false;
     }
   }
-  
+
   async function onSave() {
     if (!isValidUrl(url)) {
       setMessage({ type: "error", text: "URL is not valid." });
@@ -78,25 +78,34 @@ export default function Settings() {
 
   return (
     <>
-      <h3 className="main-heading">Monsterpedia settings</h3>
+      <Heading>Monsterpedia settings</Heading>
       <p>These settings are used to establish a connection Monsterpedia.</p>
-      <div className="space-y-4 relative">
-        <LoadingOverlay isActive={isWorking} />
-        {message ? <Callout type={message.type}>{message.text}</Callout> : null}
-        <Input
-          name="url"
-          label="URL (optional)"
-          onChange={(e) => setUrl(e?.target?.value)}
-          value={url}
-          placeholder={client?.getUrl()}
+      <div className="mt-4">
+        <LoadingOverlay
+          isActive={isWorking}
+          statusMessage="Testing settings..."
         />
-        <p className="text-xs text-green-500">
-          Specify the URL for the D&amp;D 5th Edition API.
-        </p>
-        <Button type="submit" buttonType="secondary" onClick={onSave}>
+        {message ? (
+          <Callout title={message.title} type={message.type}>
+            {message.text}
+          </Callout>
+        ) : null}
+      </div>
+      <div className="mt-4">
+        <Input
+          caption="Specify the URL for the D&amp;D 5th Edition API."
+          id="url"
+          label="URL (optional)"
+          placeholder={DEFAULT_BASE_MONSTER_URL}
+          type="text"
+          onChange={(e) => setUrl(e?.target?.value)}
+        />
+      </div>
+      <div className="mt-4">
+        <Button buttonType="secondary" className="mr-4" onClick={onSave}>
           Save
         </Button>
-        <Button type="button" className="ml-2" onClick={onTest}>
+        <Button buttonType="primary" className="mr-4" onClick={onTest}>
           Test
         </Button>
       </div>

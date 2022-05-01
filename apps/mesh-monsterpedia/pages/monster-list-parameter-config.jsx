@@ -1,4 +1,5 @@
 import React from "react";
+import { Input } from "@uniformdev/design-system";
 import { useUniformMeshLocation } from "@uniformdev/mesh-sdk-react";
 
 export default function MonsterListParameterConfig() {
@@ -8,19 +9,17 @@ export default function MonsterListParameterConfig() {
   }
   return (
     <div>
-      <label className="uniform-input-label" htmlFor="filter">
-        Filter
-      </label>
-      <input
-        className="uniform-input uniform-input-text"
-        id="filter"
-        onChange={onChangeFilter}
-        placeholder="Enter a value to include monsters with a matching name"
-        value={value?.filter}
-      />
-      <p className="text-xs text-green-500">
-        This filtering is very basic. Only enter one word &amp; no wildcards.
-      </p>
+      <div>
+        <Input
+          caption="This filtering is very basic. Only enter one word &amp; no wildcards."
+          id="url"
+          label="Filter"
+          placeholder="Enter a value to include monsters with a matching name"
+          type="text"
+          value={value?.filter}
+          onChange={onChangeFilter}
+        />
+      </div>
     </div>
   );
 }

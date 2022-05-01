@@ -3,16 +3,16 @@ components:
     name: Dragon Details
     icon: crown
     parameters:
-      - id: dragon
-        name: Dragon
+      - id: monster
+        name: Monster
         type: monster-list
         typeConfig:
           filter: dragon
     slots: []
     titleParameter: ''
     canBeComposition: false
-    created: '2022-04-22T22:16:08.740177+00:00'
-    updated: '2022-04-22T22:16:08.740177+00:00'
+    created: '2022-05-01T17:29:29.073045+00:00'
+    updated: '2022-05-01T17:29:29.073045+00:00'
   - id: landingPage
     name: Landing Page
     icon: screen
@@ -30,8 +30,8 @@ components:
         inheritAllowedComponents: false
     titleParameter: ''
     canBeComposition: true
-    created: '2022-04-21T19:03:16.808046+00:00'
-    updated: '2022-04-22T22:16:19.955121+00:00'
+    created: '2022-05-01T17:29:28.835337+00:00'
+    updated: '2022-05-01T17:29:28.835337+00:00'
 compositions:
   - composition:
       _id: 13b8cc7d-614a-4b28-9e9d-933b483277d0
@@ -42,7 +42,7 @@ compositions:
         body:
           - type: dragonDetails
             parameters:
-              dragon:
+              monster:
                 type: monster-list
                 value:
                   index: ancient-gold-dragon
@@ -50,6 +50,6 @@ compositions:
         pageName:
           type: text
           value: Welcome to the site!
-    created: '2022-04-21T19:03:17.766102+00:00'
-    modified: '2022-04-22T23:04:10.436387+00:00'
+    created: '2022-05-01T20:21:12.225328+00:00'
+    modified: '2022-05-01T20:31:02.11824+00:00'
     pattern: false
