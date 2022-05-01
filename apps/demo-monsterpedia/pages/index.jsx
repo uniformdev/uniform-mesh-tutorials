@@ -4,6 +4,7 @@ import {
   CANVAS_PUBLISHED_STATE,
 } from "@uniformdev/canvas";
 import { Composition } from "@uniformdev/canvas-react";
+
 import { useLivePreviewNextStaticProps } from "../hooks/useLivePreviewNextStaticProps";
 import resolveRenderer from "../lib/resolveRenderer";
 import LandingPageLayout from "../components/LandingPageLayout";
