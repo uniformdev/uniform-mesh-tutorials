@@ -13,18 +13,18 @@ export default function Settings() {
   const { value, setValue } = useUniformMeshLocation();
   const [isWorking, setIsWorking] = useState(false);
   const [message, setMessage] = useState(undefined);
-  const [url, setUrl] = useState(value?.url);
+  const [baseUrl, setBaseUrl] = useState(value?.baseUrl);
   const [client, setClient] = useState(createClient());
 
   useEffect(() => {
-    const client = createClient(url);
+    const client = createClient(baseUrl);
     setClient(client);
-  }, [url]);
+  }, [baseUrl]);
 
   async function onTest() {
     try {
       setIsWorking(true);
-      if (!isValidUrl(url)) {
+      if (!isValidUrl(baseUrl)) {
         setMessage({ type: "error", text: "URL is not valid." });
         return;
       }
@@ -58,13 +58,13 @@ export default function Settings() {
   }
 
   async function onSave() {
-    if (!isValidUrl(url)) {
-      setMessage({ type: "error", text: "URL is not valid." });
+    if (!isValidUrl(baseUrl)) {
+      setMessage({ type: "error", text: "Base URL is not valid." });
       return;
     }
     setIsWorking(true);
     try {
-      await setValue({ url });
+      await setValue({ baseUrl });
       setMessage({ type: "success", text: "Settings were saved." });
     } catch (error) {
       setMessage({
@@ -93,12 +93,12 @@ export default function Settings() {
       </div>
       <div className="mt-4">
         <Input
-          caption="Specify the URL for the D&amp;D 5th Edition API."
-          id="url"
-          label="URL (optional)"
+          caption="Specify the base URL for the D&amp;D 5th Edition API."
+          id="baseUrl"
+          label="Base URL (optional)"
           placeholder={DEFAULT_BASE_MONSTER_URL}
           type="text"
-          onChange={(e) => setUrl(e?.target?.value)}
+          onChange={(e) => setBaseUrl(e?.target?.value)}
         />
       </div>
       <div className="mt-4">

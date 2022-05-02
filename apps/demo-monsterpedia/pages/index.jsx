@@ -52,7 +52,7 @@ async function getComposition(slug, preview) {
 }
 
 function getEnhancers() {
-  const client = createClient();
+  const client = createClient(process.env.MONSTERPEDIA_BASE_URL);
   const monsterEnhancer = createMonsterEnhancer(client);
   return new EnhancerBuilder().parameterType(
     CANVAS_MONSTER_LIST_PARAMETER_TYPES,

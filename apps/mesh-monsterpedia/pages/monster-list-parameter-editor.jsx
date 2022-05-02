@@ -25,10 +25,9 @@ function getSearchResults(filter, monsters) {
   return filtered.map(toResult);
 }
 
-const client = createClient();
-
 export default function MonsterListParameterEditor() {
   const { value, setValue, metadata } = useUniformMeshLocation();
+  const client = createClient(metadata?.settings?.baseUrl);
   const filter = metadata?.parameterDefinition?.typeConfig?.filter;
   const [loading, setLoading] = useState(true);
   const [monsters, setMonsters] = useState([]);
@@ -57,7 +56,7 @@ export default function MonsterListParameterEditor() {
         const selected = results.filter((result) => result.id == value.index);
         addMetadata(selected).then(() => {
           setSelectedItems(selected);
-        })
+        });
       }
       setLoading(false);
     }
