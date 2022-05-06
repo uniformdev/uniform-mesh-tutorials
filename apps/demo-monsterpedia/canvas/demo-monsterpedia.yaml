@@ -2,12 +2,7 @@ components:
   - id: dragonDetails
     name: Dragon Details
     icon: crown
-    parameters:
-      - id: monster
-        name: Monster
-        type: monster-list
-        typeConfig:
-          filter: dragon
+    parameters: []
     slots: []
     titleParameter: ''
     canBeComposition: false
