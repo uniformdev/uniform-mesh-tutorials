@@ -28,7 +28,6 @@ function getSearchResults(filter, monsters) {
 export default function MonsterListParameterEditor() {
   const { value, setValue, metadata } = useUniformMeshLocation();
   const client = createClient(metadata?.settings?.baseUrl);
-  const filter = metadata?.parameterDefinition?.typeConfig?.filter;
   const [loading, setLoading] = useState(true);
   const [monsters, setMonsters] = useState([]);
   const [results, setResults] = useState([]);
@@ -48,15 +47,15 @@ export default function MonsterListParameterEditor() {
 
   useEffect(() => {
     async function getMonsters() {
+      const filter = metadata?.parameterDefinition?.typeConfig?.filter;
       const monsters = await client.getMonsters(filter);
       setMonsters(monsters);
       const results = getSearchResults(searchText, monsters);
       setResults(results);
       if (value?.index) {
         const selected = results.filter((result) => result.id == value.index);
-        addMetadata(selected).then(() => {
-          setSelectedItems(selected);
-        });
+        await addMetadata(selected);
+        setSelectedItems(selected);
       }
       setLoading(false);
     }
@@ -67,7 +66,9 @@ export default function MonsterListParameterEditor() {
     if (value?.index) {
       const selected = results.filter((result) => result.id == value.index);
       if (selected && selected.length > 0) {
-        addMetadata(selected);
+        addMetadata(selected).then(() => {
+          setSelectedItems(selected);
+        });
         return;
       }
     }
